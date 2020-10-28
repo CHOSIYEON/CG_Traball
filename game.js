@@ -34,6 +34,9 @@ function init() {
 
   canvasBuffer = document.createElement("canvas");
 
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  
   canvasBuffer.width = canvas.width;
 
   canvasBuffer.height = canvas.height;
