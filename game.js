@@ -32,6 +32,9 @@ function init() {
 
   canvasCtx = canvas.getContext("2d");
 
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+
   canvasBuffer = document.createElement("canvas");
 
   canvasBuffer.width = canvas.width;
