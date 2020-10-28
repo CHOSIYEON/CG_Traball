@@ -26,15 +26,13 @@ window.addEventListener("load", init, false);
 
 
 
-function init()
-
-{
+function init() {
 
   canvas = document.getElementById("canvas");
 
   canvasCtx = canvas.getContext("2d");
 
-  canvasBuffer= document.createElement("canvas");
+  canvasBuffer = document.createElement("canvas");
 
   canvasBuffer.width = canvas.width;
 
@@ -46,9 +44,10 @@ function init()
 
   playerUnit = {
 
-    x:canvas.width/2 - 18, y:canvas.height/2 - 18,
+    x: canvas.width / 2 - 18, y: canvas.height / 2 - 18,
 
-    width: 36, height: 36, speed:3}; //UserUnit Property
+    width: 36, height: 36, speed: 3
+  }; //UserUnit Property
 
   document.addEventListener("keydown", getKeyDown, false);
 
@@ -64,9 +63,7 @@ function init()
 
 
 
-function setImage()
-
-{
+function setImage() {
 
   spaceShipSprit = new Image();
 
@@ -76,37 +73,31 @@ function setImage()
 
 
 
-function getKeyDown(event)
-
-{
+function getKeyDown(event) {
 
   var keyValue;
 
-  if(event == null)
-
-  {
+  if (event == null) {
 
     return;
 
   }
 
-   else
+  else {
 
-  {
-
-    keyValue=event.keyCode;
+    keyValue = event.keyCode;
 
     event.preventDefault();
 
   }
 
-  if(keyValue == "87") keyValue = "38";       //up
+  if (keyValue == "87") keyValue = "38";       //up
 
-  else if(keyValue == "83") keyValue = "40";  //down
+  else if (keyValue == "83") keyValue = "40";  //down
 
-  else if(keyValue == "65") keyValue = "37";  //left
+  else if (keyValue == "65") keyValue = "37";  //left
 
-  else if(keyValue == "68") keyValue = "39";  //right
+  else if (keyValue == "68") keyValue = "39";  //right
 
   keyPressOn[keyValue] = true;
 
@@ -114,39 +105,33 @@ function getKeyDown(event)
 
 
 
-function getKeyUp(event)
-
-{
+function getKeyUp(event) {
 
   var keyValue;
 
-  if(event == null)
+  if (event == null) {
 
-  {
-
-    keyValue=window.event.keyCode;
+    keyValue = window.event.keyCode;
 
     window.event.preventDefault();
 
   }
 
-  else
+  else {
 
-  {
-
-    keyValue=event.keyCode;
+    keyValue = event.keyCode;
 
     event.preventDefault();
 
   }
 
-  if(keyValue == "87") keyValue = "38";       //up
+  if (keyValue == "87") keyValue = "38";       //up
 
-  else if(keyValue == "83") keyValue = "40";  //down
+  else if (keyValue == "83") keyValue = "40";  //down
 
-  else if(keyValue == "65") keyValue = "37";  //left
+  else if (keyValue == "65") keyValue = "37";  //left
 
-  else if(keyValue == "68") keyValue = "39";  //right
+  else if (keyValue == "68") keyValue = "39";  //right
 
   keyPressOn[keyValue] = false;
 
@@ -154,9 +139,7 @@ function getKeyUp(event)
 
 
 
-function gameLoop()
-
-{
+function gameLoop() {
 
   calcKeyInnput();
 
@@ -166,23 +149,21 @@ function gameLoop()
 
 
 
-function calcKeyInnput()
+function calcKeyInnput() {
 
-{
-
-  if(keyPressOn["38"] && playerUnit.y >= -playerUnit.height/2)
+  if (keyPressOn["38"] && playerUnit.y >= -playerUnit.height / 2)
 
     playerUnit.y -= playerUnit.speed;  //up
 
-  if(keyPressOn["40"] && playerUnit.y <= canvas.height -playerUnit.height/2)
+  if (keyPressOn["40"] && playerUnit.y <= canvas.height - playerUnit.height / 2)
 
     playerUnit.y += playerUnit.speed;  //down
 
-  if(keyPressOn["37"] && playerUnit.x >= -playerUnit.width/2)
+  if (keyPressOn["37"] && playerUnit.x >= -playerUnit.width / 2)
 
     playerUnit.x -= playerUnit.speed;  //left
 
-  if(keyPressOn["39"] && playerUnit.x <= canvas.width -playerUnit.width/2)
+  if (keyPressOn["39"] && playerUnit.x <= canvas.width - playerUnit.width / 2)
 
     playerUnit.x += playerUnit.speed;  //right
 
@@ -190,9 +171,7 @@ function calcKeyInnput()
 
 
 
-function displayAll()
-
-{
+function displayAll() {
 
   /**this code use only one layer. Change to Double-Buffer
 
@@ -228,7 +207,7 @@ function displayAll()
 
     playerUnit.width, playerUnit.height //View Size
 
-    );
+  );
 
   canvasCtx.drawImage(canvasBuffer, 0, 0);
 
