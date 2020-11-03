@@ -1,220 +1,88 @@
-var canvas;
+var scene;
+var camera;
+var renderer;
+var cube;
 
-var canvasCtx;
+window.onload = function init() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(80, window.innerWidth/window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(0xEEEEEE);
+    renderer.setSize(500, 500);
+    //Show Axis
+    var axes = new THREE.AxisHelper(10);
+    scene.add(axes);
+    //Let's make a plane
+    var planeGeometry = new THREE.PlaneGeometry(60,30,1,1);
+    var planeMaterial = new THREE.MeshBasicMaterial({color: 0xEEEEEE});
+    var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.rotation.x = -0.5 * Math.PI;
+    scene.add(plane);
 
+    camera.position.x = 0;
+    camera.position.y =30;
+    camera.position.z = 18;
+    camera.lookAt(scene.position);
+    document.getElementById("threejs_scene").appendChild(renderer.domElement);
 
-
-var canvasBuffer;
-
-var bufferCtx;
-
-
-
-var playerUnit = {}; //Player Unit Property
-
-var threadSpeed = 10;     //Gap of Thread
-
-var keyPressOn = {};//pressed - true
-
-var spaceShipSprit;
-
-var gameLoopThread;  //animation Thread ID
-
-
-
-window.addEventListener("load", init, false);
-
-
-
-function init() {
-
-  canvas = document.getElementById("canvas");
-
-  canvasCtx = canvas.getContext("2d");
-
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-
-  canvasBuffer = document.createElement("canvas");
-
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-  
-  canvasBuffer.width = canvas.width;
-
-  canvasBuffer.height = canvas.height;
-
-  bufferCtx = canvasBuffer.getContext("2d");
+    var cubeGeometry = new THREE.CubeGeometry(15,5,20);  
+    var cubeMaterials = [ 
+        new THREE.MeshBasicMaterial({color:0x0089A0, transparent:true, opacity:0.8, side: THREE.DoubleSide}),
+        new THREE.MeshBasicMaterial({color:0x0089A0, transparent:true, opacity:0.8, side: THREE.DoubleSide}), 
+        new THREE.MeshBasicMaterial({color:0x0089A0, transparent:true, opacity:0.8, side: THREE.DoubleSide}),
+        new THREE.MeshBasicMaterial({color:0x0089A0, transparent:true, opacity:0.8, side: THREE.DoubleSide}), 
+        new THREE.MeshBasicMaterial({color:0x0089A0, transparent:true, opacity:0, side: THREE.DoubleSide}), 
+        new THREE.MeshBasicMaterial({color:0x0089A0, transparent:true, opacity:0.8, side: THREE.DoubleSide}), 
+    ]; 
+    // Create a MeshFaceMaterial, which allows the cube to have different materials on each face 
+    var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials); 
+    var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    scene.add( cube );
+    cube.position.x = 0;  
+    cube.position.y = 10;  
+    cube.position.z = 10;  
+    scene.add(cube);
 
 
-
-  playerUnit = {
-
-    x: canvas.width / 2 - 18, y: canvas.height / 2 - 18,
-
-    width: 36, height: 36, speed: 3
-  }; //UserUnit Property
-
-  document.addEventListener("keydown", getKeyDown, false);
-
-  document.addEventListener("keyup", getKeyUp, false);
-
-  setImage();
+    //Let's make a sphere
+    var sphereGeometry = new THREE.SphereGeometry(1,32,32);
+    var sphereMeterial = new THREE.MeshBasicMaterial({color: 0xFE98A0});
+    var sphere = new THREE.Mesh(sphereGeometry, sphereMeterial);
+    sphere.position.x = 0;
+    sphere.position.y = 13;
+    sphere.position.z = 10;
+    scene.add(sphere);
 
 
+    renderScene();
+    
+    function renderScene() {
+    
+    renderer.render(scene,camera);
+    requestAnimationFrame(renderScene); 
+    //cube animation    
 
-  gameLoopThread = setInterval(gameLoop, threadSpeed);
+    window.onkeydown=function(event){
 
+        if(event.keyCode == 37){ //좌
+            cube.rotation.y += 0.01;
+            sphere.position.x-=0.1;
+            sphere.position.z+=0.1;
+        }else if(event.keyCode == 38){//상
+            cube.rotation.x -= 0.01; 
+            sphere.position.z-=0.1;
+        } else if(event.keyCode == 39){//우
+            cube.rotation.y -= 0.01; 
+            sphere.position.x+=0.1;
+            sphere.position.z+=0.1;
+        }else if(event.keyCode == 40){//하
+            cube.rotation.x += 0.01; 
+            sphere.position.z+=0.1;
+        }
+
+        // gl.uniform4f(uOffset,xOffset,yOffset,0,0);
+
+    }
+}
 }
 
-
-
-function setImage() {
-
-  spaceShipSprit = new Image();
-
-  spaceShipSprit.src = "https://t1.daumcdn.net/cfile/tistory/2564F54054D0952830";
-
-}
-
-
-
-function getKeyDown(event) {
-
-  var keyValue;
-
-  if (event == null) {
-
-    return;
-
-  }
-
-  else {
-
-    keyValue = event.keyCode;
-
-    event.preventDefault();
-
-  }
-
-  if (keyValue == "87") keyValue = "38";       //up
-
-  else if (keyValue == "83") keyValue = "40";  //down
-
-  else if (keyValue == "65") keyValue = "37";  //left
-
-  else if (keyValue == "68") keyValue = "39";  //right
-
-  keyPressOn[keyValue] = true;
-
-}
-
-
-
-function getKeyUp(event) {
-
-  var keyValue;
-
-  if (event == null) {
-
-    keyValue = window.event.keyCode;
-
-    window.event.preventDefault();
-
-  }
-
-  else {
-
-    keyValue = event.keyCode;
-
-    event.preventDefault();
-
-  }
-
-  if (keyValue == "87") keyValue = "38";       //up
-
-  else if (keyValue == "83") keyValue = "40";  //down
-
-  else if (keyValue == "65") keyValue = "37";  //left
-
-  else if (keyValue == "68") keyValue = "39";  //right
-
-  keyPressOn[keyValue] = false;
-
-}
-
-
-
-function gameLoop() {
-
-  calcKeyInnput();
-
-  displayAll();
-
-}
-
-
-
-function calcKeyInnput() {
-
-  if (keyPressOn["38"] && playerUnit.y >= -playerUnit.height / 2)
-
-    playerUnit.y -= playerUnit.speed;  //up
-
-  if (keyPressOn["40"] && playerUnit.y <= canvas.height - playerUnit.height / 2)
-
-    playerUnit.y += playerUnit.speed;  //down
-
-  if (keyPressOn["37"] && playerUnit.x >= -playerUnit.width / 2)
-
-    playerUnit.x -= playerUnit.speed;  //left
-
-  if (keyPressOn["39"] && playerUnit.x <= canvas.width - playerUnit.width / 2)
-
-    playerUnit.x += playerUnit.speed;  //right
-
-}
-
-
-
-function displayAll() {
-
-  /**this code use only one layer. Change to Double-Buffer
-
-  canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-  canvasCtx.drawImage(spaceShipSprit, //Source Image
-
-    405, 180, //X, Y Position on spaceShipSprit
-
-    playerUnit.width, playerUnit.height,  //Cut Size from spaceShipSprit
-
-    playerUnit.x, playerUnit.y, //View Position
-
-    playerUnit.width, playerUnit.height //View Size
-
-    );
-
-  */
-
-
-
-  bufferCtx.fillStyle = "#ccf";
-
-  bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
-
-  bufferCtx.drawImage(spaceShipSprit, //Source Image
-
-    405, 180, //X, Y Position on spaceShipSprit
-
-    playerUnit.width, playerUnit.height,  //Cut Size from spaceShipSprit
-
-    playerUnit.x, playerUnit.y, //View Position
-
-    playerUnit.width, playerUnit.height //View Size
-
-  );
-
-  canvasCtx.drawImage(canvasBuffer, 0, 0);
-
-}

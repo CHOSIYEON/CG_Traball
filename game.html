@@ -1,47 +1,41 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+uniform mat4 modelViewMatrix;
+attribute  vec4 vColor;
+varying vec4 fColor;
 
-  <title>NagarryTest</title>
-  <script type="text/javascript" src="game.js"></script>
+void
+main()
+{ 
+    fColor = vColor;
+    gl_Position = modelViewMatrix * vPosition;
+}
+</script>
 
-  <style>
-    body {
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 fColor;
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
 
-      background-color: #000000;
-
-      margin: 0px;
-
-    }
-
-    canvas {
-
-      background-color: #ccccff;
-
-    }
-  </style>
-
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="../Common/three.js-master/three.js-master/build/three.js"></script>
 </head>
 
-
-
 <body>
-
-  <canvas id="canvas" width="600" height="600">
-
-    Sorry, Your browser doesn't support HTML5 CANVAS
-
-  </canvas>
-
+    <div id="threejs_scene"></div>
+    <script type="text/javascript" src="game2.js"></script>
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
 </body>
-
-
-
-
-
-
-
-
 </html>
