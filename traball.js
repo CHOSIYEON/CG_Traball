@@ -216,7 +216,7 @@ function createBall() {
     spotLightHelper = new THREE.SpotLightHelper(spotLight);
 
     // additional spotlight properties of interest
-    spotLight.intensity = 2;
+    spotLight.intensity = 1;
     spotLight.penumbra = .5;
     spotLight.angle = Math.PI / 35;
 
