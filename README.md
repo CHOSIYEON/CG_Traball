@@ -19,7 +19,7 @@ The hint is that when you press the Enter button, you'll see the whole maze. The
 3. Increase tension by limiting time and number of hints used.
 
 # Implementation
-* Use Three.js and Ammo.js
+* Using Three.js and Ammo.js
 * Using EventListener for maze moving and hint
 * Using various light : DirLight, HemiLight, SpotLight
 * Mapping Texture : Ball, Map
